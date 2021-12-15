@@ -1,8 +1,10 @@
-import {Board} from "./board";
+import {Board, DeadZone} from "./board";
 
 //name Export
 export class Game {
     readonly board = new Board();
+    readonly upperDeadZone = new DeadZone('upper');
+    readonly lowerDeadZone = new DeadZone('lower');
     constructor() {
         const boardContainer = document.querySelector('.board-container');
         boardContainer.firstChild.remove();

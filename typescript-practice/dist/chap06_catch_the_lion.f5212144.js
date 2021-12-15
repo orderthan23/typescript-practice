@@ -123,7 +123,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Cell = exports.Board = void 0;
+exports.DeadZone = exports.Cell = exports.Board = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -219,6 +219,47 @@ var Board = /*#__PURE__*/function () {
 }();
 
 exports.Board = Board;
+
+var DeadZone = /*#__PURE__*/function () {
+  function DeadZone(type) {
+    _classCallCheck(this, DeadZone);
+
+    this.type = type;
+    this.cells = [];
+    this.deadZoneEl = document.getElementById("".concat(this.type, "_deadzone")).querySelector('.card-body');
+
+    for (var col = 0; col < 4; col++) {
+      var cell = new Cell({
+        col: col,
+        row: 0
+      }, null);
+      this.cells.push(cell);
+      this.deadZoneEl.appendChild(cell._el);
+    }
+  }
+
+  _createClass(DeadZone, [{
+    key: "put",
+    value: function put(piece) {
+      var emptyCell = this.cells.find(function (v) {
+        return v.getPiece() === null;
+      });
+      emptyCell.put(piece);
+      emptyCell.render();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      this.cells.forEach(function (v) {
+        return v.render();
+      });
+    }
+  }]);
+
+  return DeadZone;
+}();
+
+exports.DeadZone = DeadZone;
 },{}],"src/chap06_catch_the_lion/game.ts":[function(require,module,exports) {
 "use strict";
 
@@ -239,6 +280,8 @@ var Game = /*#__PURE__*/_createClass(function Game() {
   _classCallCheck(this, Game);
 
   this.board = new _board.Board();
+  this.upperDeadZone = new _board.DeadZone('upper');
+  this.lowerDeadZone = new _board.DeadZone('lower');
   var boardContainer = document.querySelector('.board-container');
   boardContainer.firstChild.remove();
   boardContainer.appendChild(this.board._el);
