@@ -1,5 +1,9 @@
+import {Board} from "./board";
 //name Export
 export class Game {
+    constructor() {
+        const board = new Board();
+    }
 
 }
 
