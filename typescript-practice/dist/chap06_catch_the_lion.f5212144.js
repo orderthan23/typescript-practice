@@ -260,6 +260,35 @@ var DeadZone = /*#__PURE__*/function () {
 }();
 
 exports.DeadZone = DeadZone;
+},{}],"src/chap06_catch_the_lion/player.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.PlayerType = exports.Player = void 0;
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PlayerType;
+exports.PlayerType = PlayerType;
+
+(function (PlayerType) {
+  PlayerType["UPPER"] = "UPPER";
+  PlayerType["LOWER"] = "LOWER";
+})(PlayerType || (exports.PlayerType = PlayerType = {}));
+
+var Player = /*#__PURE__*/_createClass(function Player(type) {
+  _classCallCheck(this, Player);
+
+  this.type = type;
+});
+
+exports.Player = Player;
 },{}],"src/chap06_catch_the_lion/game.ts":[function(require,module,exports) {
 "use strict";
 
@@ -269,6 +298,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = exports.Game = void 0;
 
 var _board = require("./board");
+
+var _player = require("./player");
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
@@ -282,6 +313,8 @@ var Game = /*#__PURE__*/_createClass(function Game() {
   this.board = new _board.Board();
   this.upperDeadZone = new _board.DeadZone('upper');
   this.lowerDeadZone = new _board.DeadZone('lower');
+  this.upperPlayer = new _player.Player(_player.PlayerType.UPPER);
+  this.lowerPlayer = new _player.Player(_player.PlayerType.LOWER);
   var boardContainer = document.querySelector('.board-container');
   boardContainer.firstChild.remove();
   boardContainer.appendChild(this.board._el);
@@ -291,7 +324,7 @@ exports.Game = Game;
 var version = 'v1';
 var _default = version;
 exports.default = _default;
-},{"./board":"src/chap06_catch_the_lion/board.ts"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"./board":"src/chap06_catch_the_lion/board.ts","./player":"src/chap06_catch_the_lion/player.ts"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
