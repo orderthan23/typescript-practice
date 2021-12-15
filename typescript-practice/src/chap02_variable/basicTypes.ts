@@ -57,3 +57,4 @@ user1 = {
 let tuple2 : [number, string];
 let tuple3 : [number, number, number];
 tuple2 = [1, "hello"];
+tuple3 = [1, 2, 3];
