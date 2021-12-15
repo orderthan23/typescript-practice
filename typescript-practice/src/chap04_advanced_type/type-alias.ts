@@ -31,7 +31,6 @@ type User2 = {
 
 class UserImpl implements User2{
     name: string;
-
     login(): boolean {
         return false;
     }
