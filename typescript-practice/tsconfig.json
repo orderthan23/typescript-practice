@@ -13,6 +13,6 @@
     "target" : "es6",
     "sourceMap": true, //브라우저에서 ts 파일을 읽게 해줌
     "removeComments": true, //브라우저에서 주석 제거
-    "noImplicitAny": true, //any 타입으로 선언 방지 기능
+    "noImplicitAny": false, //any 타입으로 선언 방지 기능
    }
 }
