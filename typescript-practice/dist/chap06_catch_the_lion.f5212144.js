@@ -189,6 +189,7 @@ var Board = /*#__PURE__*/function () {
 
     this.cells = [];
     this._el = document.createElement('div');
+    this.map = new WeakMap();
     this._el.className = 'board';
 
     var _loop = function _loop(row) {
@@ -209,6 +210,8 @@ var Board = /*#__PURE__*/function () {
           row: row,
           col: col
         }, piece);
+
+        _this.map.set(cell._el, cell);
 
         _this.cells.push(cell);
 
@@ -570,6 +573,8 @@ var _board = require("./board");
 
 var _player = require("./player");
 
+var _Piece = require("./Piece");
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -578,6 +583,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 var Game = /*#__PURE__*/function () {
   function Game() {
+    var _this = this;
+
     _classCallCheck(this, Game);
 
     this.turn = 0;
@@ -594,9 +601,85 @@ var Game = /*#__PURE__*/function () {
     this.currentPlayer = this.upperPlayer;
     this.board.render();
     this.renderInfo();
+
+    this.board._el.addEventListener('click', function (e) {
+      if (_this.state === 'END') {
+        return false;
+      }
+
+      if (e.target instanceof HTMLElement) {
+        var cellEl;
+
+        if (e.target.classList.contains('cell')) {
+          cellEl = e.target;
+        } else if (e.target.classList.contains('piece')) {
+          cellEl = e.target.parentElement;
+        } else {
+          return false;
+        }
+
+        var cell = _this.board.map.get(cellEl);
+
+        if (_this.isCurrentUserPiece(cell)) {
+          _this.select(cell);
+
+          return false;
+        }
+
+        if (_this.selectedCell) {
+          _this.move(cell);
+
+          _this.changeTurn();
+        }
+      }
+    });
   }
 
   _createClass(Game, [{
+    key: "isCurrentUserPiece",
+    value: function isCurrentUserPiece(cell) {
+      return cell !== null && cell.getPiece() != null && cell.getPiece().ownerType === this.currentPlayer.type;
+    }
+  }, {
+    key: "select",
+    value: function select(cell) {
+      if (cell.getPiece() === null) {
+        return;
+      }
+
+      if (cell.getPiece().ownerType !== this.currentPlayer.type) {
+        return;
+      }
+
+      if (this.selectedCell) {
+        this.selectedCell.deActive();
+        this.selectedCell.render();
+      }
+
+      this.selectedCell = cell;
+      cell.active();
+      cell.render();
+    }
+  }, {
+    key: "move",
+    value: function move(cell) {
+      this.selectedCell.deActive();
+      var killed = this.selectedCell.getPiece().move(this.selectedCell, cell).getKilled();
+      this.selectedCell = cell;
+
+      if (killed) {
+        if (killed.ownerType === _player.PlayerType.UPPER) {
+          this.lowerDeadZone.put(killed);
+        } else {
+          this.upperDeadZone.put(killed);
+        }
+
+        if (killed instanceof _Piece.Lion) {
+          this.state = 'END';
+        }
+      }
+    }
+  }, {
     key: "renderInfo",
     value: function renderInfo(extraMessage) {
       this.gameInfoEl.innerHTML = "#".concat(this.turn, "\uD134 ").concat(this.currentPlayer.type, " \uCC28\uB840 ").concat(extraMessage ? '| ' + extraMessage : '');
@@ -626,7 +709,7 @@ exports.Game = Game;
 var version = 'v1';
 var _default = version;
 exports.default = _default;
-},{"./board":"src/chap06_catch_the_lion/board.ts","./player":"src/chap06_catch_the_lion/player.ts"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"./board":"src/chap06_catch_the_lion/board.ts","./player":"src/chap06_catch_the_lion/player.ts","./Piece":"src/chap06_catch_the_lion/Piece.ts"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
