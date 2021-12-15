@@ -1,10 +1,13 @@
 import {Board} from "./board";
+
 //name Export
 export class Game {
+    readonly board = new Board();
     constructor() {
-        const board = new Board();
+        const boardContainer = document.querySelector('.board-container');
+        boardContainer.firstChild.remove();
+        boardContainer.appendChild(this.board._el);
     }
-
 }
 
 //default Export
