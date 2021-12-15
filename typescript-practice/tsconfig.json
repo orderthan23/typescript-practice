@@ -1,15 +1,18 @@
 //타입스크립트 설정파일 생성하기
 {
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts" //src 하위에 모든 ts 파일을 대상으로 한다
   ],
-  "exclude": [
+  "exclude": [ //제외 파일 설정
     "node_modules"
   ],
   "compilerOptions": {
    "module" : "es6",
-    "rootDir": "src",
-    "outDir": "dist",
-    "target" : "es6"
-  }
+    "rootDir": "src", //컴파일할 ts 파일의 경로
+    "outDir": "dist", //컴파일된 js 파일을 저장할 경로
+    "target" : "es6",
+    "sourceMap": true, //브라우저에서 ts 파일을 읽게 해줌
+    "removeComments": true, //브라우저에서 주석 제거
+    "noImplicitAny": true, //any 타입으로 선언 방지 기능
+   }
 }
