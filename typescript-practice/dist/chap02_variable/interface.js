@@ -8,6 +8,13 @@ function tryTurnOn(tv) {
     tv.turnOn();
 }
 tryTurnOn(myTv);
+function ajaxSignUp(data) {
+}
+ajaxSignUp({
+    id: "",
+    email: "",
+    password: "",
+});
 function createBoard() {
     const cells = [];
     for (let row = 0; row < 4; row++) {
