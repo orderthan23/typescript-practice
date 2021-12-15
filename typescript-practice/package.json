@@ -1,0 +1,11 @@
+{
+  "name": "typescript-practice",
+  "version": "1.0.0",
+  "description": "오픈 소스 프로그래밍 언어\r 자바스크립트의 상위 집합으로 ECMA 스크립트의 최신 표준을 지원\r 정적인 언어로 컴파일 시간에 타입을 검사",
+  "main": "hello.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
