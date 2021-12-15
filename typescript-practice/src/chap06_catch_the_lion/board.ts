@@ -1,4 +1,5 @@
 import {Piece} from './Piece'
+import {Player} from "./player";
 
 export interface Position {
     row: number;
@@ -49,14 +50,18 @@ export class Board {
     cells: Cell[] = [];
     _el: HTMLElement = document.createElement('div');
 
-    constructor() {
+    constructor(upperPlayer: Player, lowerPlayer: Player) {
         this._el.className = 'board';
         for (let row = 0; row < 4; row++) {
             const rowEl = document.createElement('div');
             rowEl.className = 'row';
             this._el.appendChild(rowEl);
             for (let col = 0; col < 3; col++) {
-                const cell = new Cell({row, col}, null);
+                const piece =
+                    upperPlayer.getPices().find(({currentPosition}) => currentPosition.col === col && currentPosition.row === row) ||
+                    lowerPlayer.getPices().find(({currentPosition}) => currentPosition.col === col && currentPosition.row === row)
+
+                const cell = new Cell({row, col}, piece);
                 this.cells.push(cell);
                 rowEl.appendChild(cell._el);
             }
@@ -75,20 +80,20 @@ export class DeadZone {
         .querySelector('.card-body');
 
     constructor(public type: 'upper' | 'lower') {
-        for (let col = 0; col <4; col++){
+        for (let col = 0; col < 4; col++) {
             const cell = new Cell({col, row: 0}, null);
             this.cells.push(cell);
             this.deadZoneEl.appendChild(cell._el);
         }
     }
 
-    put(piece : Piece) {
+    put(piece: Piece) {
         const emptyCell = this.cells.find(v => v.getPiece() === null);
         emptyCell.put(piece);
         emptyCell.render();
     }
 
-    render(){
+    render() {
         this.cells.forEach(v => v.render());
     }
 }

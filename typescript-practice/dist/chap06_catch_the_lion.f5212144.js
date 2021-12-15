@@ -182,27 +182,46 @@ var Cell = /*#__PURE__*/function () {
 exports.Cell = Cell;
 
 var Board = /*#__PURE__*/function () {
-  function Board() {
+  function Board(upperPlayer, lowerPlayer) {
+    var _this = this;
+
     _classCallCheck(this, Board);
 
     this.cells = [];
     this._el = document.createElement('div');
     this._el.className = 'board';
 
-    for (var row = 0; row < 4; row++) {
+    var _loop = function _loop(row) {
       var rowEl = document.createElement('div');
       rowEl.className = 'row';
 
-      this._el.appendChild(rowEl);
+      _this._el.appendChild(rowEl);
 
-      for (var col = 0; col < 3; col++) {
+      var _loop2 = function _loop2(col) {
+        var piece = upperPlayer.getPices().find(function (_ref) {
+          var currentPosition = _ref.currentPosition;
+          return currentPosition.col === col && currentPosition.row === row;
+        }) || lowerPlayer.getPices().find(function (_ref2) {
+          var currentPosition = _ref2.currentPosition;
+          return currentPosition.col === col && currentPosition.row === row;
+        });
         var cell = new Cell({
           row: row,
           col: col
-        }, null);
-        this.cells.push(cell);
+        }, piece);
+
+        _this.cells.push(cell);
+
         rowEl.appendChild(cell._el);
+      };
+
+      for (var col = 0; col < 3; col++) {
+        _loop2(col);
       }
+    };
+
+    for (var row = 0; row < 4; row++) {
+      _loop(row);
     }
   }
 
@@ -260,7 +279,214 @@ var DeadZone = /*#__PURE__*/function () {
 }();
 
 exports.DeadZone = DeadZone;
-},{}],"src/chap06_catch_the_lion/player.ts":[function(require,module,exports) {
+},{}],"src/chap06_catch_the_lion/images/lion.png":[function(require,module,exports) {
+module.exports = "/lion.f1e3b836.png";
+},{}],"src/chap06_catch_the_lion/images/chicken.png":[function(require,module,exports) {
+module.exports = "/chicken.e4f35c12.png";
+},{}],"src/chap06_catch_the_lion/images/griff.png":[function(require,module,exports) {
+module.exports = "/griff.f502b0fc.png";
+},{}],"src/chap06_catch_the_lion/images/elophant.png":[function(require,module,exports) {
+module.exports = "/elophant.cc3673a0.png";
+},{}],"src/chap06_catch_the_lion/Piece.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.MoveResult = exports.Lion = exports.Griff = exports.Elephant = exports.Chick = void 0;
+
+var _player = require("./player");
+
+var _lion = _interopRequireDefault(require("./images/lion.png"));
+
+var _chicken = _interopRequireDefault(require("./images/chicken.png"));
+
+var _griff = _interopRequireDefault(require("./images/griff.png"));
+
+var _elophant = _interopRequireDefault(require("./images/elophant.png"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } Object.defineProperty(subClass, "prototype", { value: Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }), writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var MoveResult = /*#__PURE__*/function () {
+  function MoveResult(killedPiece) {
+    _classCallCheck(this, MoveResult);
+
+    this.killedPiece = killedPiece;
+  }
+
+  _createClass(MoveResult, [{
+    key: "getKilled",
+    value: function getKilled() {
+      return this.killedPiece;
+    }
+  }]);
+
+  return MoveResult;
+}();
+
+exports.MoveResult = MoveResult;
+
+var DefaultPiece = /*#__PURE__*/function () {
+  function DefaultPiece(ownerType, currentPosition) {
+    _classCallCheck(this, DefaultPiece);
+
+    this.ownerType = ownerType;
+    this.currentPosition = currentPosition;
+  }
+
+  _createClass(DefaultPiece, [{
+    key: "move",
+    value: function move(from, to) {
+      if (!this.canMove(to.position)) {
+        throw new Error('cannot move!!');
+      }
+
+      var moveResult = new MoveResult(to.getPiece() !== null ? to.getPiece() : null);
+      to.put(this);
+      from.put(null);
+      this.currentPosition = to.position;
+      return moveResult;
+    }
+  }]);
+
+  return DefaultPiece;
+}();
+
+var Lion = /*#__PURE__*/function (_DefaultPiece) {
+  _inherits(Lion, _DefaultPiece);
+
+  var _super = _createSuper(Lion);
+
+  function Lion() {
+    _classCallCheck(this, Lion);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(Lion, [{
+    key: "canMove",
+    value: function canMove(pos) {
+      var canMove = pos.row === this.currentPosition.row + 1 && pos.col === this.currentPosition.col || pos.row === this.currentPosition.row - 1 && pos.col === this.currentPosition.col || pos.col === this.currentPosition.col + 1 && pos.row === this.currentPosition.row || pos.col === this.currentPosition.col - 1 && pos.row === this.currentPosition.row || pos.row === this.currentPosition.row + 1 && pos.col === this.currentPosition.col + 1 || pos.row === this.currentPosition.row + 1 && pos.col === this.currentPosition.col - 1 || pos.row === this.currentPosition.row - 1 && pos.col === this.currentPosition.col + 1 || pos.row === this.currentPosition.row - 1 && pos.col === this.currentPosition.col - 1;
+      return canMove;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return "<img class=\"piece ".concat(this.ownerType, "\" src=\"").concat(_lion.default, "\" width=\"90%\" height=\"90%\"/>");
+    }
+  }]);
+
+  return Lion;
+}(DefaultPiece);
+
+exports.Lion = Lion;
+
+var Elephant = /*#__PURE__*/function (_DefaultPiece2) {
+  _inherits(Elephant, _DefaultPiece2);
+
+  var _super2 = _createSuper(Elephant);
+
+  function Elephant() {
+    _classCallCheck(this, Elephant);
+
+    return _super2.apply(this, arguments);
+  }
+
+  _createClass(Elephant, [{
+    key: "canMove",
+    value: function canMove(pos) {
+      return pos.row === this.currentPosition.row + 1 && pos.col === this.currentPosition.col + 1 || pos.row === this.currentPosition.row + 1 && pos.col === this.currentPosition.col - 1 || pos.row === this.currentPosition.row - 1 && pos.col === this.currentPosition.col + 1 || pos.row === this.currentPosition.row - 1 && pos.col === this.currentPosition.col - 1;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return "<img class=\"piece ".concat(this.ownerType, "\" src=\"").concat(_elophant.default, "\" width=\"90%\" height=\"90%\"/>");
+    }
+  }]);
+
+  return Elephant;
+}(DefaultPiece);
+
+exports.Elephant = Elephant;
+
+var Griff = /*#__PURE__*/function (_DefaultPiece3) {
+  _inherits(Griff, _DefaultPiece3);
+
+  var _super3 = _createSuper(Griff);
+
+  function Griff() {
+    _classCallCheck(this, Griff);
+
+    return _super3.apply(this, arguments);
+  }
+
+  _createClass(Griff, [{
+    key: "canMove",
+    value: function canMove(pos) {
+      return pos.row === this.currentPosition.row + 1 && pos.col === this.currentPosition.col || pos.row === this.currentPosition.row - 1 && pos.col === this.currentPosition.col || pos.col === this.currentPosition.col + 1 && pos.row === this.currentPosition.row || pos.col === this.currentPosition.col - 1 && pos.row === this.currentPosition.row;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return "<img class=\"piece ".concat(this.ownerType, "\" src=\"").concat(_griff.default, "\" width=\"90%\" height=\"90%\"/>");
+    }
+  }]);
+
+  return Griff;
+}(DefaultPiece);
+
+exports.Griff = Griff;
+
+var Chick = /*#__PURE__*/function (_DefaultPiece4) {
+  _inherits(Chick, _DefaultPiece4);
+
+  var _super4 = _createSuper(Chick);
+
+  function Chick() {
+    _classCallCheck(this, Chick);
+
+    return _super4.apply(this, arguments);
+  }
+
+  _createClass(Chick, [{
+    key: "canMove",
+    value: function canMove(pos) {
+      return this.currentPosition.row + (this.ownerType == _player.PlayerType.UPPER ? +1 : -1) === pos.row;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return "<img class=\"piece ".concat(this.ownerType, "\" src=\"").concat(_chicken.default, "\" width=\"90%\" height=\"90%\"/>");
+    }
+  }]);
+
+  return Chick;
+}(DefaultPiece);
+
+exports.Chick = Chick;
+},{"./player":"src/chap06_catch_the_lion/player.ts","./images/lion.png":"src/chap06_catch_the_lion/images/lion.png","./images/chicken.png":"src/chap06_catch_the_lion/images/chicken.png","./images/griff.png":"src/chap06_catch_the_lion/images/griff.png","./images/elophant.png":"src/chap06_catch_the_lion/images/elophant.png"}],"src/chap06_catch_the_lion/player.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -268,11 +494,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.PlayerType = exports.Player = void 0;
 
+var _Piece = require("./Piece");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var PlayerType;
 exports.PlayerType = PlayerType;
@@ -282,14 +510,55 @@ exports.PlayerType = PlayerType;
   PlayerType["LOWER"] = "LOWER";
 })(PlayerType || (exports.PlayerType = PlayerType = {}));
 
-var Player = /*#__PURE__*/_createClass(function Player(type) {
-  _classCallCheck(this, Player);
+var Player = /*#__PURE__*/function () {
+  function Player(type) {
+    _classCallCheck(this, Player);
 
-  this.type = type;
-});
+    this.type = type;
+
+    if (type === PlayerType.UPPER) {
+      this.pieces = [new _Piece.Griff(PlayerType.UPPER, {
+        row: 0,
+        col: 0
+      }), new _Piece.Lion(PlayerType.UPPER, {
+        row: 0,
+        col: 1
+      }), new _Piece.Elephant(PlayerType.UPPER, {
+        row: 0,
+        col: 2
+      }), new _Piece.Chick(PlayerType.UPPER, {
+        row: 1,
+        col: 1
+      })];
+    } else {
+      this.pieces = [new _Piece.Elephant(PlayerType.LOWER, {
+        row: 3,
+        col: 0
+      }), new _Piece.Lion(PlayerType.LOWER, {
+        row: 3,
+        col: 1
+      }), new _Piece.Griff(PlayerType.LOWER, {
+        row: 3,
+        col: 2
+      }), new _Piece.Chick(PlayerType.LOWER, {
+        row: 2,
+        col: 1
+      })];
+    }
+  }
+
+  _createClass(Player, [{
+    key: "getPices",
+    value: function getPices() {
+      return this.pieces;
+    }
+  }]);
+
+  return Player;
+}();
 
 exports.Player = Player;
-},{}],"src/chap06_catch_the_lion/game.ts":[function(require,module,exports) {
+},{"./Piece":"src/chap06_catch_the_lion/Piece.ts"}],"src/chap06_catch_the_lion/game.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -301,24 +570,57 @@ var _board = require("./board");
 
 var _player = require("./player");
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var Game = /*#__PURE__*/function () {
+  function Game() {
+    _classCallCheck(this, Game);
 
-var Game = /*#__PURE__*/_createClass(function Game() {
-  _classCallCheck(this, Game);
+    this.turn = 0;
+    this.gameInfoEl = document.querySelector('.alert');
+    this.state = 'STARTED';
+    this.upperPlayer = new _player.Player(_player.PlayerType.UPPER);
+    this.lowerPlayer = new _player.Player(_player.PlayerType.LOWER);
+    this.board = new _board.Board(this.upperPlayer, this.lowerPlayer);
+    this.upperDeadZone = new _board.DeadZone('upper');
+    this.lowerDeadZone = new _board.DeadZone('lower');
+    var boardContainer = document.querySelector('.board-container');
+    boardContainer.firstChild.remove();
+    boardContainer.appendChild(this.board._el);
+    this.currentPlayer = this.upperPlayer;
+    this.board.render();
+    this.renderInfo();
+  }
 
-  this.board = new _board.Board();
-  this.upperDeadZone = new _board.DeadZone('upper');
-  this.lowerDeadZone = new _board.DeadZone('lower');
-  this.upperPlayer = new _player.Player(_player.PlayerType.UPPER);
-  this.lowerPlayer = new _player.Player(_player.PlayerType.LOWER);
-  var boardContainer = document.querySelector('.board-container');
-  boardContainer.firstChild.remove();
-  boardContainer.appendChild(this.board._el);
-});
+  _createClass(Game, [{
+    key: "renderInfo",
+    value: function renderInfo(extraMessage) {
+      this.gameInfoEl.innerHTML = "#".concat(this.turn, "\uD134 ").concat(this.currentPlayer.type, " \uCC28\uB840 ").concat(extraMessage ? '| ' + extraMessage : '');
+    }
+  }, {
+    key: "changeTurn",
+    value: function changeTurn() {
+      this.selectedCell.deActive();
+      this.selectedCell = null;
+
+      if (this.state === 'END') {
+        this.renderInfo('END!');
+      } else {
+        this.turn += 1;
+        this.currentPlayer = this.currentPlayer === this.lowerPlayer ? this.upperPlayer : this.lowerPlayer;
+        this.renderInfo();
+      }
+
+      this.board.render();
+    }
+  }]);
+
+  return Game;
+}();
 
 exports.Game = Game;
 var version = 'v1';

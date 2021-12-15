@@ -3,7 +3,7 @@ import {PlayerType} from "./player";
 import lionImage from "./images/lion.png";
 import chickenImage from "./images/chicken.png";
 import griffImage from "./images/griff.png";
-import elophantImage from "./images/elophant.png";
+import elephantImage from "./images/elophant.png";
 
 export class MoveResult {
     constructor(private killedPiece: Piece) {
@@ -78,7 +78,7 @@ export class Elephant extends DefaultPiece {
     }
 
     render(): string {
-        return `<img class="piece ${this.ownerType}" src="${elophantImage}" width="90%" height="90%"/>`;
+        return `<img class="piece ${this.ownerType}" src="${elephantImage}" width="90%" height="90%"/>`;
     }
 }
 
